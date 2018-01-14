@@ -1,0 +1,131 @@
+<div class="container">
+  <div class="dashboard-tile dashboard-tile--highlight time-widget">
+    <div class="time-widget__time">21:38</div>
+  </div>
+  <div class="dashboard-tile weather-widget">7•C</div>
+  <div class="dashboard-tile calendar-widget">3 Meetings</div>
+  <div class="dashboard-tile news-widget">
+    <h2>Latest news:</h2>
+    <div class="news-widget--items">
+
+    </div>
+  </div>
+</div>
+
+<style>
+  body {
+    padding: none;
+    background: black;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: 20% 20% 20% 20% 20%;
+    grid-column-gap: 10px;
+    grid-gap: 10px 15px;
+  }
+
+  .dashboard-tile {
+    align-self: stretch;
+    background: rgba(236, 240, 241,1.0);
+    padding: 20px 10px;
+  }
+
+  .dashboard-tile--highlight {
+    background: rgba(142, 68, 173,1.0);
+    color: white;
+  }
+
+  .dashboard-tile h1, .dashboard-tile h2, .dashboard-tile h3 {
+    margin-top: 0;
+  }
+
+  .time-widget {
+    grid-column-start: 1;
+    grid-column-end: 1;
+  }
+
+  .time-widget__time {
+    font-size: 40px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .weather-widget {
+    grid-column-start: 2;
+    grid-column-end: 6;
+  }
+
+  .calendar-widget {
+
+  }
+
+  .news-widget {
+    grid-column-start: 2;
+    grid-column-end: 6;
+  }
+
+  .weather-widget {
+    font-size: 40px;
+  }
+
+  .news-widget__item__title {
+    font-size: 25px;
+  }
+
+</style>
+
+<script>
+  function getRandomQuote() {
+    fetch("http://api.forismatic.com/api/1.0/?method=getQuote&key=457653&format=json&lang=en", {
+      mode: "no-cors"
+    }).then(function (data) {
+      return data.json();
+    }).then(function (json) {
+      console.log(json);
+    }).catch(function (err) {
+      console.log(err);
+    });
+  }
+
+  function getLatestNews() {
+    fetch("https://newsapi.org/v2/top-headlines?country=nl&apiKey=6230b03275d34352a8a8ff579f5ea1fc", {
+    }).then(function (data) {
+      return data.json();
+    }).then(function (json) {
+      var item_container = document.querySelector('.news-widget--items');
+      var news_item = "";
+
+      for (var index = 0; index < 4; index++) {
+        var element = json.articles[index];
+        console.log(element);
+
+        news_item += `
+          <div class="news-widget__item">
+            <h3 class="news-widget__item__title">
+              ${element.title}
+            </h3>
+            <p class="news-widget__item__content">
+              ${element.description || element.url}
+            </p>
+          </div>
+      `;
+      }
+
+      
+
+      item_container.innerHTML = news_item;
+
+      console.log(item_container);
+    }).catch(function (err) {
+      console.log(err);
+    });
+  }
+
+  var test = `test`;
+  console.log(test);
+
+  getLatestNews()
+</script>
