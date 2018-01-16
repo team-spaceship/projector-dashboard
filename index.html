@@ -1,9 +1,12 @@
-<div class="container">
+
+<div class="dashboard-container">
   <div class="dashboard-tile dashboard-tile--highlight time-widget">
     <div class="time-widget__time">21:38</div>
   </div>
-  <div class="dashboard-tile weather-widget">7•C</div>
-  <div class="dashboard-tile calendar-widget">3 Meetings</div>
+  <div class="dashboard-tile weather-widget">
+    <div class="weather-widget__temp">7•C</div>
+  </div>
+  <!-- <div class="dashboard-tile calendar-widget">3 Meetings</div> -->
   <div class="dashboard-tile news-widget">
     <h2>Latest news:</h2>
     <div class="news-widget--items">
@@ -19,18 +22,11 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
 
-  .container {
-    display: grid;
-    grid-template-columns: 20% 20% 20% 20% 20%;
-    grid-template-rows: 20% 20% 20% 20% 20%;
-    grid-column-gap: 10px;
-    grid-gap: 10px 15px;
-  }
-
   .dashboard-tile {
     align-self: stretch;
     background: rgba(236, 240, 241,1.0);
     padding: 20px 10px;
+    color: black;
   }
 
   .dashboard-tile--highlight {
@@ -53,28 +49,41 @@
     width: 100%;
   }
 
-  .weather-widget {
-    grid-column-start: 2;
-    grid-column-end: 6;
-  }
-
   .calendar-widget {
 
   }
-
-  .news-widget {
-    grid-column-start: 2;
-    grid-column-end: 6;
-  }
-
+  
   .weather-widget {
     font-size: 40px;
+    background: rgba(41, 128, 185,1.0);
+    color: white;
+  }
+
+  .news-widget {
+    background: rgba(39, 174, 96,1.0);
+    color: white;
   }
 
   .news-widget__item__title {
     font-size: 25px;
   }
 
+  .weather-widget__temp {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .weather-widget__icon {
+    width: 150px;
+    display: flex;
+    align-self: center;
+    padding: 30px;
+  }
+
+  .weather-widget__icon h1 {
+    display: block;
+    padding: 40px;
+  }
 </style>
 
 <script>
@@ -113,19 +122,43 @@
           </div>
       `;
       }
-
-      
-
       item_container.innerHTML = news_item;
-
-      console.log(item_container);
     }).catch(function (err) {
       console.log(err);
     });
   }
 
-  var test = `test`;
-  console.log(test);
+  function getWeather() {
+    fetch("https://api.buienradar.nl/data/public/1.1/jsonfeed", {
+    }).then(function (data) {
+      return data.json();
+    }).then(function(json) {
+      var item_container = document.querySelector('.weather-widget__temp');
+      console.log(json.buienradarnl.weergegevens.actueel_weer.weerstations.weerstation);
+      var station = json.buienradarnl.weergegevens.actueel_weer.weerstations.weerstation.filter(station => {
+        return station.stationcode == 6344;
+      });
 
-  getLatestNews()
+      station = station[0];
+      
+      var weather_html = `
+        <img src="${station.icoonactueel['#text']}" alt="${station.icoonactueel['@zin']} " class="weather-widget__icon">
+        <h1>
+          ${station.icoonactueel['@zin']} - ${station.temperatuurGC} <span>&#8451;</span>
+        </h1>
+      `;
+
+      item_container.innerHTML = weather_html;
+    });
+  }
+
+  var test = `test`;
+
+  function init() {
+    getLatestNews()
+    getWeather();
+  }
+
+  init();
 </script>
+
