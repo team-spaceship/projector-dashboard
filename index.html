@@ -1,14 +1,14 @@
 
 <div class="dashboard-container">
   <div class="dashboard-tile dashboard-tile--highlight time-widget">
-    <div class="time-widget__time">21:38</div>
+    <div class="time-widget__time">00:00</div>
   </div>
   <div class="dashboard-tile weather-widget">
     <div class="weather-widget__temp">7•C</div>
   </div>
   <!-- <div class="dashboard-tile calendar-widget">3 Meetings</div> -->
   <div class="dashboard-tile news-widget">
-    <h2>Latest news:</h2>
+    <h2 class="text-align-center">Latest news:</h2>
     <div class="news-widget--items">
 
     </div>
@@ -20,6 +20,10 @@
     padding: none;
     background: black;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .text-align-center {
+    text-align: center;
   }
 
   .dashboard-tile {
@@ -60,13 +64,18 @@
   }
 
   .news-widget {
-    background: rgba(39, 174, 96,1.0);
+    background: black;
     color: white;
   }
 
   .news-widget__item__title {
-    font-size: 25px;
+    font-size: 40px;
+    line-height: 60px;
   }
+
+  .dashboard-tile h3 {
+    margin: 30px;
+  }  
 
   .weather-widget__temp {
     display: flex;
@@ -83,6 +92,11 @@
   .weather-widget__icon h1 {
     display: block;
     padding: 40px;
+  }
+
+  h1.weather-widget__text {
+    text-align: center;
+    margin-top: 40px;
   }
 </style>
 
@@ -105,20 +119,17 @@
       return data.json();
     }).then(function (json) {
       var item_container = document.querySelector('.news-widget--items');
-      var news_item = "";
+      var news_item = "<hr />";
 
       for (var index = 0; index < 4; index++) {
         var element = json.articles[index];
-        console.log(element);
 
         news_item += `
           <div class="news-widget__item">
             <h3 class="news-widget__item__title">
               ${element.title}
             </h3>
-            <p class="news-widget__item__content">
-              ${element.description || element.url}
-            </p>
+            <hr />
           </div>
       `;
       }
@@ -142,9 +153,10 @@
       station = station[0];
       
       var weather_html = `
-        <img src="${station.icoonactueel['#text']}" alt="${station.icoonactueel['@zin']} " class="weather-widget__icon">
-        <h1>
-          ${station.icoonactueel['@zin']} - ${station.temperatuurGC} <span>&#8451;</span>
+        <!--<img src="${station.icoonactueel['#text']}" alt="${station.icoonactueel['@zin']} " class="weather-widget__icon">-->
+        <h1 class="weather-widget__text">
+          ${station.icoonactueel['@zin']}, <br />
+          ${station.temperatuurGC} <span>&#8451;</span>
         </h1>
       `;
 
@@ -157,7 +169,25 @@
   function init() {
     getLatestNews()
     getWeather();
+
+    if (typeof klokinterval == "number") {
+      clearInterval(klokinterval);
+    }
+
+    klokinterval = setInterval(function () {
+      setDate();
+    }, 1000);    
   }
+
+  function setDate() {
+    var now = new Date();
+
+    var seconds = now.getSeconds();
+    var mins = now.getMinutes() > 9 ? now.getMinutes() : "0" + now.getMinutes();
+    var hour = now.getHours() > 9 ? now.getHours() : "0" + now.getHours();
+
+    document.querySelector(".time-widget__time").innerHTML = `${hour}:${mins}`;
+  }    
 
   init();
 </script>
