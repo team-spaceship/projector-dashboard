@@ -176,7 +176,7 @@
     }
 
     var interval = setInterval(function () {
-      setDate();
+      setDashboardClock();
     }, 1000);    
     
     if(window.interval && typeof window.interval == "object") {
@@ -184,7 +184,7 @@
     }
   }
 
-  function setDate() {
+  function setDashboardClock() {
     var now = new Date();
 
     var seconds = now.getSeconds();
