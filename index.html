@@ -171,11 +171,11 @@
     getLatestNews()
     getWeather();
 
-    if (typeof klokinterval == "number") {
-      clearInterval(klokinterval);
+    if (typeof window.interval == "number") {
+      clearInterval(window.interval);
     }
 
-    klokinterval = setInterval(function () {
+    window.interval = setInterval(function () {
       setDate();
     }, 1000);    
   }
