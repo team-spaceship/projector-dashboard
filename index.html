@@ -171,11 +171,11 @@
     getLatestNews()
     getWeather();
 
-    if (typeof klokinterval == "number") {
-      clearInterval(klokinterval);
+    if (typeof window.interval == "number") {
+      clearInterval(window.interval);
     }
 
-    klokinterval = setInterval(function () {
+    window.interval = setInterval(function () {
       setDate();
     }, 1000);    
   }
@@ -188,8 +188,8 @@
     var hour = now.getHours() > 9 ? now.getHours() : "0" + now.getHours();
 
     document.querySelector(".time-widget__time").innerHTML = `${hour}:${mins}`;
-  }    
-
+  }
+  
   startDashboard();
 </script>
 
